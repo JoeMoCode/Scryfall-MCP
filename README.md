@@ -29,7 +29,7 @@ A Model Context Protocol (MCP) server that provides Magic: The Gathering card da
 ### For Claude Desktop
 
 1. **Locate your Claude Desktop config file:**
-   - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **macOS:** `~/Library/Application\ Support/Claude/claude_desktop_config.json`
    - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 2. **Add the server configuration:**
@@ -188,7 +188,7 @@ The server includes error handling for rate limits and API issues.
 
 ## License
 
-This project is licensed under the ISC License.
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 
