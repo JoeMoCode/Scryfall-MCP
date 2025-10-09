@@ -1,16 +1,32 @@
 # Scryfall MCP Server
 
-A Model Context Protocol (MCP) server that provides Magic: The Gathering card data through Scryfall's API. This server enables Claude Desktop to search for cards, get detailed card information, retrieve set data, and access random cards.
+A Model Context Protocol (MCP) server that brings Magic: The Gathering card data directly into Claude Desktop. Ask Claude about any Magic card, and it will provide detailed information from Scryfall's comprehensive database.
 
-## Features
+## What Can It Do?
 
-- **Card Search** - Search for cards by name, type, mana cost, or any other criteria
-- **Card Details** - Get comprehensive card information including prices, legalities, and images
-- **Set Information** - Retrieve detailed information about Magic sets
-- **Random Cards** - Get random cards for inspiration or discovery
-- **Rich Formatting** - Well-formatted responses with card details, prices, and legalities
+- **Search for Cards** - Find cards by name, type, color, mana cost, or any game characteristic you can think of
+- **Get Card Details** - View complete card information including prices, format legalities, and high-quality images
+- **Explore Sets** - Learn about Magic sets, their release dates, and what cards they contain
+- **Random Cards** - Discover random cards for deck inspiration or just for fun
+- **Smart Caching** - Previously viewed cards load instantly from a local cache
+- **Resource Browser** - Access your recently viewed cards through Claude's resource system
 
 ## Installation
+
+### Prerequisites
+
+You'll need **Node.js and npm** installed on your computer. npm is a tool that helps install and manage the software this server needs to run.
+
+**To install Node.js and npm:**
+- **On Mac:**
+  - Download from [nodejs.org](https://nodejs.org/) and run the installer, or
+  - If you have Homebrew: `brew install node`
+- **On Windows:**
+  - Download from [nodejs.org](https://nodejs.org/) and run the installer
+
+To verify it's installed, open a terminal and type: `npm --version`
+
+### Installation Steps
 
 1. **Clone or download this repository**
 
@@ -48,72 +64,63 @@ A Model Context Protocol (MCP) server that provides Magic: The Gathering card da
 
 3. **Restart Claude Desktop**
 
-## Usage
+## How to Use
 
-Once configured, you can use the following tools in Claude Desktop:
+Once you've installed and configured the server, you can simply ask Claude about Magic cards in natural language. Here are some examples:
 
-### Search Cards
-```
-Search for Lightning Bolt
-Find all red creatures with power 4
-Show me cards with "draw a card" in the text
-```
+### Searching for Cards
+- "Search for Lightning Bolt"
+- "Find all red creatures with power 4 or greater"
+- "Show me cards with 'draw a card' in their text"
+- "Find blue instants that cost 2 mana"
 
-### Get Card Details
-```
-Get details for Black Lotus
-Show me information about Jace, the Mind Sculptor
-What are the legalities for Sol Ring?
-```
+### Getting Card Information
+- "Tell me about Black Lotus"
+- "What are the format legalities for Sol Ring?"
+- "Show me the current price of Jace, the Mind Sculptor"
+- "Get details for Ragavan, Nimble Pilferer"
 
-### Set Information
-```
-Tell me about set dmu
-What's in the Dominaria United set?
-Show me info about set code neo
-```
+### Exploring Sets
+- "What's in the Dominaria United set?"
+- "Tell me about set code MOM"
+- "Show me information about the latest set"
 
-### Random Cards
-```
-Give me a random card
-Show me 3 random cards
-Get 5 random creatures
-```
+### Random Discovery
+- "Show me a random card"
+- "Give me 3 random creatures"
+- "Surprise me with 5 random cards"
 
-## Available Tools
+### Accessing Recently Viewed Cards
+Cards you've already looked up are cached locally and appear in Claude's resource browser, making them quick to access again without additional searches.
 
-### `search_cards`
-Search for Magic: The Gathering cards by various criteria.
+## Technical Details
 
-**Parameters:**
-- `query` (required): Search query (card name, type, mana cost, etc.)
-- `limit` (optional): Maximum number of results (default: 10)
+### Available Tools
 
-**Example:** `search_cards("lightning bolt")`
+The server provides these tools that Claude can use:
 
-### `get_card_details`
-Get detailed information about a specific card by exact name.
+**`search_cards`** - Search for cards using Scryfall's powerful search syntax
+- Supports searching by name, type, color, mana cost, card text, set, rarity, and more
+- Returns up to 10 results by default (configurable)
 
-**Parameters:**
-- `name` (required): Exact card name
+**`get_card_details`** - Get complete information about a specific card
+- Includes prices, legalities, images, and all card attributes
+- Uses smart caching to speed up repeated lookups
 
-**Example:** `get_card_details("Black Lotus")`
+**`get_set_info`** - Get information about a Magic set
+- Requires the set code (like "dmu" for Dominaria United or "mom" for March of the Machine)
 
-### `get_set_info`
-Get information about a Magic: The Gathering set.
+**`get_random_card`** - Get random cards
+- Can request multiple random cards at once
+- Great for deck inspiration or exploring the game
 
-**Parameters:**
-- `set_code` (required): Three or four letter set code (e.g., "dmu", "neo")
+### Resources Feature
 
-**Example:** `get_set_info("dmu")`
-
-### `get_random_card`
-Get one or more random Magic: The Gathering cards.
-
-**Parameters:**
-- `count` (optional): Number of random cards to get (default: 1)
-
-**Example:** `get_random_card(3)`
+The server implements MCP resources, which means:
+- Cards you look up are cached locally for 1 hour
+- Recently viewed cards appear in Claude's resource browser
+- Cached cards load instantly without making new API requests
+- The cache automatically cleans up old entries
 
 ## Development
 
@@ -137,54 +144,65 @@ npm run build
 └── README.md            # This file
 ```
 
-## API Rate Limits
+## Performance & Limits
 
-This server uses the Scryfall API, which has the following rate limits:
-- 100 requests per second
-- Be respectful with your usage
+### Smart Caching
+To improve speed and reduce unnecessary API calls, this server caches card information:
+- Cached cards load instantly
+- Cache expires after 1 hour
+- Up to 100 cards stored in memory at once
 
-The server includes error handling for rate limits and API issues.
+### Scryfall API Rate Limits
+This server uses Scryfall's free API, which allows:
+- Up to 100 requests per second
+- No API key required
+
+The server automatically handles errors and rate limits gracefully.
 
 ## Troubleshooting
 
-### Server Not Appearing in Claude Desktop
+### The server isn't showing up in Claude Desktop
 
-1. **Check config file path and syntax:**
-   ```bash
-   cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
-   ```
+1. **Check your configuration file** - Make sure the path is correct and the JSON syntax is valid
+   - On Mac: `cat ~/Library/Application\ Support/Claude/claude_desktop_config.json`
+   - On Windows: Open the file in Notepad and verify it looks correct
 
-2. **Verify the server path is absolute and correct**
+2. **Verify the path is absolute** - The path must be complete (like `/Users/yourname/projects/ScryfallMCP/dist/index.js`), not relative (like `./dist/index.js`)
 
-3. **Check server builds successfully:**
+3. **Make sure it built successfully:**
    ```bash
    npm run build
    ```
 
-4. **Test server manually:**
-   ```bash
-   npm run dev
-   ```
+4. **Restart Claude Desktop completely** - Quit the app entirely and reopen it
 
-### API Errors
+### Claude says "Unknown tool" or the tools don't work
 
-1. **Check internet connection**
-2. **Verify Scryfall service status at https://scryfall.com**
-3. **Check server logs for detailed error messages**
+- This usually means Claude Desktop didn't reload the configuration
+- Try restarting Claude Desktop again
+- Check that the `dist/index.js` file exists after running `npm run build`
 
-### Common Issues
+### API or connection errors
 
-- **"Unknown tool" errors:** Restart Claude Desktop after configuration changes
-- **Build failures:** Ensure TypeScript dependencies are installed
-- **Permission errors:** Check file permissions on the dist/index.js file
+1. **Check your internet connection** - The server needs to reach Scryfall's API
+2. **Visit https://scryfall.com** to make sure their service is up
+3. **Look at the console output** when running `npm run dev` to see detailed error messages
+
+### Build or installation problems
+
+- **"npm: command not found"** - You need to install Node.js and npm (see Prerequisites above)
+- **Build failures** - Try deleting the `node_modules` folder and running `npm install` again
+- **Permission errors** - Make sure you have permission to read and execute files in the project folder
 
 ## Contributing
+
+Want to improve this server? Contributions are welcome!
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Test thoroughly
-5. Submit a pull request
+5. Submit a pull request with a clear description of *what* you've added and *why*
 
 ## License
 

@@ -44,7 +44,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             query: {
               type: 'string',
-              description: 'Search query (card name, type, mana cost, etc.)'
+              description: 'Search query using Scryfall syntax. Supported prefixes: c:/color: (card color), id:/identity: (color identity), t:/type: (card/sub/supertype), o:/oracle: (card text), fo:/fulloracle: (full oracle text), keyword:/kw: (keyword abilities), m:/mana: (mana symbols), mv:/manavalue: (converted mana cost), power:, toughness:, loyalty:, devotion:, is: (card characteristics), f:/format: (format legality), e:/s:/set: (set code), r:/rarity:, a:/artist:, year:, game: (paper/arena/mtgo), usd: (USD price), eur: (EUR price), tix: (MTGO ticket price). Operators: >, <, =, >=, <=, !=. Use OR for alternatives, - for negation, parentheses for grouping, quotes for exact phrases, ! for exact names.'
             },
             limit: {
               type: 'number',
