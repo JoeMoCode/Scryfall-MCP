@@ -1,31 +1,44 @@
 import * as Scryfall from 'scryfall-sdk';
+import { cardCache } from '../cache/cardCache';
 
 export async function handleGetCardDetails(args: { name: string }) {
   try {
     const { name } = args;
 
-    console.error(`Getting details for card: ${name}`);
+    // Check cache first
+    let cachedCard = cardCache.get(name);
+    let details;
 
-    const card = await Scryfall.Cards.byName(name);
+    if (!cachedCard) {
+      // Cache miss - fetch from Scryfall
+      console.error(`Cache miss for card: ${name}`);
+      const card = await Scryfall.Cards.byName(name);
 
-    const details = {
-      name: card.name,
-      mana_cost: card.mana_cost || '',
-      cmc: card.cmc,
-      type_line: card.type_line,
-      oracle_text: card.oracle_text || '',
-      power: card.power,
-      toughness: card.toughness,
-      loyalty: card.loyalty,
-      set_name: card.set_name,
-      set_code: card.set,
-      rarity: card.rarity,
-      artist: card.artist,
-      collector_number: card.collector_number,
-      prices: card.prices,
-      legalities: card.legalities,
-      image_uris: card.image_uris
-    };
+      details = {
+        name: card.name,
+        mana_cost: card.mana_cost || '',
+        cmc: card.cmc,
+        type_line: card.type_line,
+        oracle_text: card.oracle_text || '',
+        power: card.power || undefined,
+        toughness: card.toughness || undefined,
+        loyalty: card.loyalty || undefined,
+        set_name: card.set_name,
+        set_code: card.set,
+        rarity: card.rarity,
+        artist: card.artist || '',
+        collector_number: card.collector_number,
+        prices: card.prices,
+        legalities: card.legalities,
+        image_uris: card.image_uris
+      };
+
+      // Store in cache
+      cardCache.set(name, details);
+    } else {
+      console.error(`Cache hit for card: ${name}`);
+      details = cachedCard;
+    }
 
     let detailText = `**${details.name}** ${details.mana_cost}\n`;
     detailText += `*Mana Value: ${details.cmc}*\n\n`;

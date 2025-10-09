@@ -1,4 +1,5 @@
 import * as Scryfall from 'scryfall-sdk';
+import { cardCache } from '../cache/cardCache';
 
 export async function handleGetRandomCard(args: { count?: number }) {
   try {
@@ -17,18 +18,21 @@ export async function handleGetRandomCard(args: { count?: number }) {
         cmc: card.cmc,
         type_line: card.type_line,
         oracle_text: card.oracle_text || '',
-        power: card.power,
-        toughness: card.toughness,
-        loyalty: card.loyalty,
+        power: card.power || undefined,
+        toughness: card.toughness || undefined,
+        loyalty: card.loyalty || undefined,
         set_name: card.set_name,
         set_code: card.set,
         rarity: card.rarity,
-        artist: card.artist,
+        artist: card.artist || '',
         collector_number: card.collector_number,
         prices: card.prices,
         legalities: card.legalities,
         image_uris: card.image_uris
       };
+
+      // Cache the random card
+      cardCache.set(card.name, details);
 
       let detailText = `**${details.name}** ${details.mana_cost}\n`;
       detailText += `*Mana Value: ${details.cmc}*\n\n`;
