@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
+import { configureUserAgent } from './config/userAgent.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+
+// Configure fetch with custom User-Agent for Scryfall API compliance
+configureUserAgent();
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
